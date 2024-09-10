@@ -1,0 +1,15 @@
+syntax: glob
+
+Doc/HTML.*
+
+*.obj
+*.o
+*.lo
+*.slo
+
+*.so
+
+*.lib
+*.a
+*.la
+*.lai

@@ -1,0 +1,24 @@
+#include <stdio.h>
+
+int main()
+{
+    const int buf = 10000;
+    FILE *file_ptr =  fopen("check.txt", "rw");
+    char *strings_in_file[buf] = {};
+    char *string;
+    int count_lines = 0;
+    printf()
+    while ((string = fgets(string, buf, file_ptr)) != NULL)
+    {
+        strings_in_file[count_lines++] = string;
+    }
+    
+    for (int i = 0; i < count_lines; i++)
+    {
+        printf("%s", strings_in_file[i]);
+    }
+
+
+    return 0;
+}
+
