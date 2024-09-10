@@ -5,13 +5,21 @@
 #include <stdbool.h>
 
 
-int cmpln_str(char* s1, char* s2);
+int left_cmpln_str(char* s1, char* s2);
+int right_cmpln_str(char* s1, char* s2);
+int multy_complain(char* s1, char* s2, int mode);
+
 void reading_text_from_file(FILE* file_pointer, char* symbols, char** lines, int* lines_counter);
-void sort_lines(char **lines, int num_of_lines, int flag);
+void sort_lines(char **lines, int num_of_lines, int reverse, int mode);
 void print_lines_to_file(FILE* fp, char **lines, int num_of_lines);
-int main(int argc, char** argv)
+
+const int LEFT_COMPLANATION_CONST = -1;
+const int RIGHT_COMPLANATION_CONST = 1;
+
+int main()
 {   
-    printf("%d\n", argc);
+    int reverse = 1;
+
     const int buf = 1024;
     FILE *file_ptr =  fopen("run_dir/check.txt", "r");
     assert(file_ptr != NULL);
@@ -20,11 +28,11 @@ int main(int argc, char** argv)
     char** pointer_to_beginning_lines = (char**) calloc(buf, sizeof(char *));
     pointer_to_beginning_lines[0] = symbols_in_file;
     int lines_counter = 0;
-    int flag = -1;
+    
 
     reading_text_from_file(file_ptr, symbols_in_file, pointer_to_beginning_lines, &lines_counter);
  
-    sort_lines(pointer_to_beginning_lines, lines_counter, flag);
+    sort_lines(pointer_to_beginning_lines, lines_counter, reverse, RIGHT_COMPLANATION_CONST);
 
     print_lines_to_file(stdout, pointer_to_beginning_lines, lines_counter);
 
@@ -35,14 +43,46 @@ int main(int argc, char** argv)
 
 
 
-int cmpln_str(char* s1, char* s2)
+int left_cmpln_str(char* s1, char* s2)
 {
     while (*s1 != '\0' && *s2 != '\0')
         if (*s1++ != *s2++) return *(--s1) - *(--s2);
     return *s1 - *s2;
 }
 
+int right_cmpln_str(char* s1, char* s2)
+{
 
+    int first = 0;
+    while (s1[++first] != '\0');
+
+    int second = 0;
+    while (s2[++second] != '\0');
+
+    while (first >= 0 && second >= 0)
+    {
+        if (s1[first--] != s2[second--])
+            return s1[++first] - s2[++second];
+    }
+    if (first == second) return 0;
+    if (first < 0) return -1;
+    return 1;
+    
+}
+
+int multy_complain(char* s1, char* s2, int mode)
+{
+    
+    if (mode == LEFT_COMPLANATION_CONST)
+    {
+        return left_cmpln_str(s1,s2);
+    }
+    if (mode == RIGHT_COMPLANATION_CONST)
+    {
+        return right_cmpln_str(s1, s2);
+    }
+    return 0;
+}
 
 void reading_text_from_file(FILE* file_pointer, char* symbols, char** lines, int* lines_counter)
 {
@@ -66,13 +106,14 @@ void reading_text_from_file(FILE* file_pointer, char* symbols, char** lines, int
 }
 
 
-void sort_lines(char **lines, int num_of_lines, int flag)
+void sort_lines(char **lines, int num_of_lines, int reverse, int mode)
 {
+
     for (int i = 0; i < num_of_lines; i++)
     {
         for (int j = 1; j < num_of_lines - i; j++)
         {
-            if (flag * cmpln_str(lines[j - 1], lines[j]) > 0)
+            if (reverse * multy_complain(lines[j - 1], lines[j], mode) > 0)
             {
                 char* tmp = NULL;
                 tmp = lines[j-1];
@@ -93,3 +134,5 @@ void print_lines_to_file(FILE* fp, char **lines, int num_of_lines)
         fputc('\n', fp);
     }
 }
+
+
