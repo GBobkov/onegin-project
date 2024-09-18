@@ -1,3 +1,5 @@
+#include "C:\CodeBlocks\MinGW\include\TXlib.h"
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <assert.h>
@@ -8,11 +10,10 @@
 #include <string.h>
 #include <ctype.h>
 #include <signal.h>
-#include <cstdio>
 
 #include "sorting.h"
 #include "reading.h"
-
+#include "writing.h"
 
 
 volatile sig_atomic_t current_line = 0;
@@ -24,9 +25,6 @@ void handle_sigsegv(int signum) {
 
 
 
-
-void Print_Lines_To_File(TEXT_OBJECT file_constructor_ptr, FILE* file_ptr);
-
 int main()
 {
     if (signal(SIGSEGV, handle_sigsegv) == SIG_ERR) {
@@ -34,11 +32,12 @@ int main()
         return 1;
     }
 
-    const char *file_name = "C:/Users/bobko/projects/second-project/run_dir/onegin.txt";
+    const char *input_file_name = "C:/Users/bobko/projects/second-project/run_dir/onegin_test.txt";
+    const char *output_file_name = "onegin_output.txt"; //"C:/Users/bobko/projects/second-project/run_dir/onegin_output.txt";
 
-
+    
     struct stat information_about_file;
-    stat(file_name, &information_about_file);
+    stat(input_file_name, &information_about_file);
     size_t buflen = information_about_file.st_size + 1;
 
     int reverse = 1;
@@ -47,16 +46,17 @@ int main()
 
     size_t number_of_lines = 0;
     char* buffer = (char*) calloc(buflen, sizeof(char));
-    char** pointers_to_lines = NULL;
+    LINE* lines_ptrs = NULL;
 
-    struct TEXT_OBJECT onegin = {file_name, &buflen, buffer, &number_of_lines, pointers_to_lines};
-
+    struct TEXT_OBJECT onegin = {input_file_name, &buflen, buffer, &number_of_lines, lines_ptrs};
 
     Read_Text_From_File(&onegin);
-    Sort_Lines(&onegin, reverse, MODE);
-    Print_Lines_To_File(onegin, stdout);
-
-
+    //Quick_Sort(&onegin);
+    //Sort_Lines(&onegin, reverse, MODE);
+    Print_Lines_To_File(onegin, output_file_name);
+    
+    
+    printf("\n\nPROGRAM COMPLETE!!!\n");
     return 0;
 }
 
@@ -65,25 +65,6 @@ int main()
 
 
 
-
-
-void Print_Lines_To_File(TEXT_OBJECT file_constructor_ptr, FILE* file_ptr)
-{
-    assert(file_ptr != NULL);
-    assert(file_constructor_ptr.pointer_to_buf != NULL);
-    assert(file_constructor_ptr.pointers_to_lines != NULL);
-
-
-    for (size_t i = 0; i < *file_constructor_ptr.number_of_lines; i++)
-    {
-
-        fputs(file_constructor_ptr.pointers_to_lines[i], file_ptr);
-
-        fputc('\n', file_ptr);
-    }
-
-
-}
 
 
 

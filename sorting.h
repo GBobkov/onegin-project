@@ -4,13 +4,15 @@
 #include <string.h>
 #include <ctype.h>
 #include <stdlib.h>
+#include <stdio.h>
+#include <stdlib.h>
 
 
+void Quick_Sort(TEXT_OBJECT *file_constructor_ptr);
 
-
-int Left_Str_Comparator(char* s1, char* s2);
-int Right_Str_Comparator(char* s1, char* s2);
-int Multy_Compare(char* s1, char* s2, int mode);
+int Left_Str_Comparator(LINE s1_, LINE s2_);
+int Right_Str_Comparator(LINE s1_, LINE s2_);
+int Multy_Compare(LINE s1, LINE s2, int mode, int flag);
 void Sort_Lines(TEXT_OBJECT *file_constructor_ptr, int reverse, int mode);
 
 #endif

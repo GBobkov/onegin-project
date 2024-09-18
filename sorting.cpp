@@ -2,25 +2,23 @@
 
 
 
-
-int Left_Str_Comparator(char* s1, char* s2)
-{
+int Left_Str_Comparator(LINE s1_, LINE s2_)
+{   
+    char *s1 = (char *) s1_.ptr_to_line;
+    char *s2 = (char *) s2_.ptr_to_line;
+    
     while (*s1 != '\0' && *s2 != '\0')
         if (*s1++ != *s2++) return *(--s1) - *(--s2);
     return *s1 - *s2;
 }
 
-int Right_Str_Comparator(char* s1, char* s2)
+int Right_Str_Comparator(LINE s1_, LINE s2_)
 {
+    char *s1 = (char *) s1_.ptr_to_line;
+    char *s2 = (char *) s2_.ptr_to_line;
 
-    int first = 0;
-    while (s1[++first] != '\0');
-
-    int second = 0;
-    while (s2[second] != '\0')
-    {
-        second++;
-    }
+    int first = s1_.len_of_line;
+    int second = s2_.len_of_line;
 
 
     while (first >= 0 && second >= 0)
@@ -39,17 +37,18 @@ int Right_Str_Comparator(char* s1, char* s2)
 
 }
 
-int Multy_Compare(char* s1, char* s2, int mode)
+int Multy_Compare(LINE s1, LINE s2, int mode, int reverse)
 {
 
     if (mode == LEFT_COMPLANATION_CONST)
     {
-        return Left_Str_Comparator(s1,s2);
+        return (reverse * Left_Str_Comparator(s1, s2) > 0)? 1 : 0;
     }
     if (mode == RIGHT_COMPLANATION_CONST)
     {
-        return Right_Str_Comparator(s1, s2);
+        return (reverse * Right_Str_Comparator(s1,s2) > 0)? 1 : 0;
     }
+    printf("Unpredictable situation:\nmode = %d, expected mode = %d or mode = %d.\n", mode, LEFT_COMPLANATION_CONST, RIGHT_COMPLANATION_CONST);
     return 0;
 }
 
@@ -61,14 +60,16 @@ void Sort_Lines(TEXT_OBJECT *file_constructor_ptr, int reverse, int mode)
     {
         for (int j = 1; j < number_of_lines; j++)
         {
-            if (reverse * Multy_Compare(file_constructor_ptr->pointers_to_lines[j - 1], file_constructor_ptr->pointers_to_lines[j], mode) > 0)
+
+            if (Multy_Compare(file_constructor_ptr->lines_ptrs[j - 1], file_constructor_ptr->lines_ptrs[j], mode, reverse))
             {
-                char* tmp = NULL;
-                tmp = file_constructor_ptr->pointers_to_lines[j-1];
-                file_constructor_ptr->pointers_to_lines[j - 1] = file_constructor_ptr->pointers_to_lines[j];
-                file_constructor_ptr->pointers_to_lines[j] = tmp;
+                LINE tmp = file_constructor_ptr->lines_ptrs[j-1];
+                file_constructor_ptr->lines_ptrs[j - 1] = file_constructor_ptr->lines_ptrs[j];
+                file_constructor_ptr->lines_ptrs[j] = tmp;
             }
         }
     }
 }
+
+
 

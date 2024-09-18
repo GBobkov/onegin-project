@@ -2,6 +2,7 @@
 #define READING_H
 #include <stdio.h>
 #include <assert.h>
+#include <string.h>
 #include "constants.h"
 
 void Read_Text_From_File(TEXT_OBJECT *file_constructor_ptr);
