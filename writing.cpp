@@ -5,7 +5,7 @@ void Print_Lines_To_File(TEXT_OBJECT file_constructor_ptr, const char* output_fi
 {
     FILE *file_ptr = NULL;
     if (strcmp(output_file_name, "stdout") == 0) file_ptr = stdout;
-    else file_ptr = fopen64(output_file_name, "w");
+    else file_ptr = fopen(output_file_name, "w");
 
     assert(file_ptr != NULL);
     assert(file_constructor_ptr.pointer_to_buf != NULL);
