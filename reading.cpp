@@ -6,13 +6,17 @@
 
 int Is_Unnecessary_Symbol(char sym);
 void Clean_Unnecessary_Symbols_From_Buffer(TEXT_OBJECT *ptr_file);
-void Realloc_Buffer(char *pointer_to_buf);
+void Realloc_Buffer(char **pointer_to_buf);
 
 void Read_Text_From_File(TEXT_OBJECT *file_constructor_ptr)
 {
+     
     Fill_Buffer(file_constructor_ptr);
+     
     Recycle_Buffer(file_constructor_ptr);
+     
     Creat_Jagged_Array_Lines(file_constructor_ptr);
+     
 }
 
 
@@ -32,10 +36,11 @@ void Fill_Buffer(TEXT_OBJECT *file_constructor_ptr)
 
 void Recycle_Buffer(TEXT_OBJECT *file_constructor_ptr)
 {
+     
     Clean_Unnecessary_Symbols_From_Buffer(file_constructor_ptr);    
-
-    Realloc_Buffer(file_constructor_ptr->pointer_to_buf);
-
+     
+    Realloc_Buffer(&file_constructor_ptr->pointer_to_buf);
+     
 
 }
 
@@ -50,32 +55,36 @@ void Creat_Jagged_Array_Lines(TEXT_OBJECT *file_constructor_ptr)
         return;
     }
     
+
     file_constructor_ptr->lines_ptrs = (LINE *) calloc(*file_constructor_ptr->number_of_lines, sizeof(LINE));
     int counter = 0;
-    file_constructor_ptr->lines_ptrs[counter] = {file_constructor_ptr->pointer_to_buf, 0};
-    char *s = file_constructor_ptr->pointer_to_buf;
+    file_constructor_ptr->lines_ptrs[counter].ptr_to_line = file_constructor_ptr->pointer_to_buf;
+    file_constructor_ptr->lines_ptrs[counter].len_of_line = 0;
+    char *string = file_constructor_ptr->pointer_to_buf;
 
 
-    while (*s != EOF)
+
+    while (*string != EOF)
     {
         bool flag = false;
-        while (*(++s) == '\0') flag = true;
+        while (*(++string) == '\0') flag = true;
         if (flag)
         {
-            file_constructor_ptr->lines_ptrs[++counter] = {s, 0};
-            char *last_line = file_constructor_ptr->lines_ptrs[counter - 1].ptr_to_line;
-            file_constructor_ptr->lines_ptrs[counter - 1] = {last_line, strlen(last_line)};
+            file_constructor_ptr->lines_ptrs[++counter].ptr_to_line = string;
+            file_constructor_ptr->lines_ptrs[counter].len_of_line = 0;
+            file_constructor_ptr->lines_ptrs[counter - 1].len_of_line = strlen(file_constructor_ptr->lines_ptrs[counter - 1].ptr_to_line);
         }
     }
     char *last_line = file_constructor_ptr->lines_ptrs[counter].ptr_to_line;
-    file_constructor_ptr->lines_ptrs[counter] = {last_line, strlen(last_line)};
+    file_constructor_ptr->lines_ptrs[counter].ptr_to_line = last_line;
+    file_constructor_ptr->lines_ptrs[counter].len_of_line = strlen(last_line);
     
 }
 
 
 int Is_Unnecessary_Symbol(char sym)
 {
-    return (sym == '\n' || sym == '\r' || sym == ' ' || sym == '\t') ? 1 : 0;
+    return ((sym == '\n' || sym == '\r' || sym == ' ' || sym == '\t') && sym != EOF) ? 1 : 0;
 }
 
 void Clean_Unnecessary_Symbols_From_Buffer(TEXT_OBJECT *ptr_file)
@@ -106,10 +115,11 @@ void Clean_Unnecessary_Symbols_From_Buffer(TEXT_OBJECT *ptr_file)
 }
 
 
-void Realloc_Buffer(char *pointer_to_buf)
+void Realloc_Buffer(char **pointer_to_buf)
 {
-    char *s = pointer_to_buf;
-    char *uk_on_left = pointer_to_buf;
+    char *s = *pointer_to_buf;
+    char *uk_on_left = *pointer_to_buf;
+     
     while (*s != EOF)
     {   
         *uk_on_left = *s;
@@ -125,7 +135,9 @@ void Realloc_Buffer(char *pointer_to_buf)
         }
         s++;
     }
+     
     *uk_on_left = EOF;
-    pointer_to_buf = (char *) realloc(pointer_to_buf, (uk_on_left - pointer_to_buf + 2) * sizeof(char));
-
+     
+    *pointer_to_buf = (char *) realloc(*pointer_to_buf, (uk_on_left - *pointer_to_buf + 2) * sizeof(char));
+     
 }

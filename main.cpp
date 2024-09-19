@@ -1,4 +1,4 @@
-#include "C:\CodeBlocks\MinGW\include\TXlib.h"
+//#include "C:\CodeBlocks\MinGW\include\TXlib.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -16,7 +16,7 @@
 #include "writing.h"
 
 
-volatile sig_atomic_t current_line = 0;
+sig_atomic_t current_line = 0;
 void handle_sigsegv(int signum) {
     printf("Segfault!!  In line %d.\n", current_line);
     exit(0); // Завершаем программу
@@ -31,9 +31,8 @@ int main()
         perror("Ошибка при установке обработчика сигнала");
         return 1;
     }
-
-    const char *input_file_name = "C:/Users/bobko/projects/second-project/run_dir/onegin_test.txt";
-    const char *output_file_name = "onegin_output.txt"; //"C:/Users/bobko/projects/second-project/run_dir/onegin_output.txt";
+    const char *input_file_name = "onegin_test.txt";
+    const char *output_file_name = "onegin_output.txt";
 
     
     struct stat information_about_file;
@@ -46,16 +45,23 @@ int main()
 
     size_t number_of_lines = 0;
     char* buffer = (char*) calloc(buflen, sizeof(char));
-    LINE* lines_ptrs = NULL;
 
-    struct TEXT_OBJECT onegin = {input_file_name, &buflen, buffer, &number_of_lines, lines_ptrs};
+    
+    TEXT_OBJECT onegin = {input_file_name, &buflen, buffer, &number_of_lines, NULL};
+    
 
     Read_Text_From_File(&onegin);
+
+
     //Quick_Sort(&onegin);
-    //Sort_Lines(&onegin, reverse, MODE);
-    Print_Lines_To_File(onegin, output_file_name);
-    
-    
+    Sort_Lines(&onegin, reverse, MODE);
+    //Print_Lines_To_File(onegin, output_file_name);
+
+    printf("\n\nAAAAA\n");
+    free((void *)onegin.pointer_to_buf);
+    printf("AAAAA\n");
+    //free(onegin.number_of_lines);
+
     printf("\n\nPROGRAM COMPLETE!!!\n");
     return 0;
 }

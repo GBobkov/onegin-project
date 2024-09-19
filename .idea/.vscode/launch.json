@@ -8,8 +8,8 @@
       "args": [],
       "stopAtEntry": false,
       "externalConsole": true,
-      "cwd": "c:/Users/bobko/projects/onegin-project",
-      "program": "c:/Users/bobko/projects/onegin-project/build/Debug/outDebug",
+      "cwd": "c:/Users/bobko/projects/second-project",
+      "program": "c:/Users/bobko/projects/second-project/run_dir/main.exe",
       "MIMode": "gdb",
       "miDebuggerPath": "gdb",
       "setupCommands": [
