@@ -1,0 +1,5 @@
+.git-auto/
+.vscode/
+bin/
+obj/
+run_dir/
