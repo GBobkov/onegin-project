@@ -1,11 +1,7 @@
 #ifndef SORTING_H
 #define SORTING_H
 #include "constants.h"
-#include <string.h>
-#include <ctype.h>
-#include <stdlib.h>
-#include <stdio.h>
-#include <stdlib.h>
+
 
 
 void Quick_Sort(TEXT_OBJECT *file_constructor_ptr);

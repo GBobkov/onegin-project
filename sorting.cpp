@@ -1,6 +1,8 @@
 #include "sorting.h"
 
-
+#include <stdio.h>
+#include <string.h>
+#include <ctype.h>
 
 int Left_Str_Comparator(LINE s1_, LINE s2_)
 {   

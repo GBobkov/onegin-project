@@ -34,7 +34,7 @@ int main()
     const char *input_file_name = "onegin_test.txt";
     const char *output_file_name = "onegin_output.txt";
 
-    
+
     struct stat information_about_file;
     stat(input_file_name, &information_about_file);
     size_t buflen = information_about_file.st_size + 1;
@@ -46,21 +46,19 @@ int main()
     size_t number_of_lines = 0;
     char* buffer = (char*) calloc(buflen, sizeof(char));
 
-    
+
     TEXT_OBJECT onegin = {input_file_name, &buflen, buffer, &number_of_lines, NULL};
-    
+
 
     Read_Text_From_File(&onegin);
 
 
-    //Quick_Sort(&onegin);
     Sort_Lines(&onegin, reverse, MODE);
-    //Print_Lines_To_File(onegin, output_file_name);
+    Print_Lines_To_File(onegin, output_file_name);
 
-    printf("\n\nAAAAA\n");
+
     free((void *)onegin.pointer_to_buf);
-    printf("AAAAA\n");
-    //free(onegin.number_of_lines);
+    free((void *)onegin.lines_ptrs);
 
     printf("\n\nPROGRAM COMPLETE!!!\n");
     return 0;

@@ -1,7 +1,7 @@
 #ifndef CONSTANTS_H
 #define CONSTANTS_H
 
-#include <ctype.h>
+#include <stddef.h>
 
 struct LINE 
 {
